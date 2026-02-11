@@ -75,6 +75,4 @@ public:
         return CountOverlapDays(*this, P2);
     }
 
-    
-        static int GET(){}
 };
