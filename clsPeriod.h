@@ -74,4 +74,7 @@ public:
     short CountOverlapDaysWith(clsPeriod P2) {
         return CountOverlapDays(*this, P2);
     }
+
+    
+        static int GET(){}
 };
