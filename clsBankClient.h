@@ -245,23 +245,23 @@ public:
         return _GetEmptyClientObject();
     }
 
-    enum enSaveResults { svFailEmptyObject = 0, svSucceded = 1, svFaildAccountNumberExists =2 };
+    enum enSaveResults { svFaildEmptyObject = 0, svSucceeded = 1, svFaildAccountNumberExists =2 };
 
     enSaveResults Save() {
         switch (_Mode) {
         case enMode::EmptyMode:
             if (IsEmpty())
-            return enSaveResults::svFailEmptyObject;
+            return enSaveResults::svFaildEmptyObject;
         case enMode::UpdateMode:
             _Update();
-            return enSaveResults::svSucceded;
+            return enSaveResults::svSucceeded;
         case enMode::AddNewMode:
             if (clsBankClient::IsClientExist(_AccountNumber))
                 return clsBankClient::enSaveResults::svFaildAccountNumberExists;
             else
                 _AddNew();
             _Mode = enMode::UpdateMode;
-            return enSaveResults::svSucceded;
+            return enSaveResults::svSucceeded;
 
         }
     }
