@@ -172,6 +172,8 @@ public:
         return _MarkedForDelete;
     }
 
+    /*
+      No UI Related code iside object.
     void Print()
     {
         cout << "\nClient Card:";
@@ -186,7 +188,7 @@ public:
         cout << "\nBalance     : " << _AccountBalance;
         cout << "\n___________________\n";
 
-    }
+    }*/
 
 
     static clsBankClient Find(string AccountNumber)
@@ -305,6 +307,38 @@ public:
             Sum += Client.AccountBalance;
         }
         return Sum;
+    }
+
+    static double GetTotalBalances()
+    {
+        vector <clsBankClient> vClients = clsBankClient::GetClientsList();
+
+        double TotalBalances = 0;
+
+        for (clsBankClient Client : vClients)
+        {
+
+            TotalBalances += Client.AccountBalance;
+        }
+
+        return TotalBalances;
+    }
+
+    void Deposit(double Amount)
+    {
+        _AccountBalance += Amount;
+        Save();
+    }
+
+    bool Withdraw(double Amount)
+    {
+        if (Amount > _AccountBalance)
+            return false;
+        else {
+            _AccountBalance -= Amount;
+            Save();
+            return true;
+        }
     }
 
 };

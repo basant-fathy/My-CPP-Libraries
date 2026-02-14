@@ -98,7 +98,7 @@ public:
 		return Number;
 	}
 
-	static double ReadDNumber(string ErrorMessage = "Invalid number, Enter again!\n") {
+	static double ReadDblNumber(string ErrorMessage = "Invalid number, Enter again!\n") {
 		double Number;
 		while (!(cin >> Number)) {
 			cin.clear();
@@ -111,7 +111,7 @@ public:
 		double Number;
 		while (!IsNumberBetween(Number, From, To)) {
 			cout << ErrorMessage;
-			Number = ReadDNumber();
+			Number = ReadDblNumber();
 		};
 		return Number;
 	}
