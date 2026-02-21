@@ -11,9 +11,9 @@ class clsDate
 {
 private:
 	short _Year, _Month, _Day;
-
 public:
-	static clsDate GetSystemDate() {
+	static clsDate GetSystemDate()
+	{
 		clsDate Date;
 
 		std::time_t t = std::time(nullptr);
@@ -28,6 +28,27 @@ public:
 		return Date;
 	}
 
+	static string GetSystemDateTimeString() {
+		std::time_t t = std::time(nullptr);
+		std::tm now{};
+
+		localtime_s(&now, &t);
+
+		short Day, Month, Year, Hour, Minute, Second;
+
+		Year = now.tm_year + 1900;
+		Month = now.tm_mon + 1;
+		Day = now.tm_mday;
+		Hour = now.tm_hour;
+		Minute = now.tm_min;
+		Second = now.tm_sec;
+
+		return (to_string(Day) + "/"
+			+ to_string(Month) + "/"
+			+ to_string(Year) + " - "
+			+ to_string(Hour) + ":" + to_string(Minute) + ":" + to_string(Second));
+	}
+
 	clsDate() {
 		std::time_t t = std::time(nullptr);
 		std::tm now{};
@@ -37,6 +58,7 @@ public:
 		_Year = now.tm_year + 1900;
 		_Month = now.tm_mon + 1;
 		_Day = now.tm_mday;
+
 	}
 	clsDate(string Date_string) {
 		vector <string> vDate;
@@ -101,10 +123,12 @@ public:
 
 		return Date;
 	}
+
 	static string DateToString(clsDate Date) {
 		return to_string(Date._Day)
 			+ "/" + to_string(Date._Month)
 			+ "/" + to_string(Date._Year);
+
 	}
 
 	static bool IsLeapYear(int Year) {
