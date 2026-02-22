@@ -5,6 +5,7 @@
 #include "clsString.h"
 #include <vector>
 #include <fstream>
+#include "Global.h"
 
 using namespace std;
 
@@ -121,7 +122,61 @@ private:
         _AddDataLineToFile(_ConverClientObjectToLine(*this));
     }
 
+    struct stTransferLog;
+    static stTransferLog _ConvertTransferLogLinetoRecord(string Line, string Seperator = "#//#") {
 
+        vector<string> vTransferLog = clsString::Split(Line, Seperator);
+
+        return stTransferLog{ vTransferLog[0], vTransferLog[1], vTransferLog[2],
+            stod(vTransferLog[3]),stod(vTransferLog[4]),stod(vTransferLog[5]), vTransferLog[6]};
+    }
+
+    static  vector <stTransferLog> _LoadTransferLogDataFromFile() {
+        vector <stTransferLog> vTransferLog;
+
+        fstream MyFile;
+        MyFile.open("TransferLog.txt", ios::in);//read Mode
+
+        if (MyFile.is_open()) {
+
+            string Line;
+            while (getline(MyFile, Line)) {
+
+                stTransferLog TransferLog = _ConvertTransferLogLinetoRecord(Line);
+                vTransferLog.push_back(TransferLog);
+            }
+            MyFile.close();
+        }
+        return vTransferLog;
+    }
+
+    string _PreparTransferLogRecored(double Amount, clsBankClient Receiver,
+        string UserName, string Seperator = "#//#") {
+
+        string TrancferLog = "";
+        TrancferLog += clsDate::GetSystemDateTimeString() + Seperator;
+        TrancferLog += AccountNumber() + Seperator;
+        TrancferLog += Receiver.AccountNumber() + Seperator;
+        TrancferLog += to_string(Amount) + Seperator;
+        TrancferLog += to_string(AccountBalance) + Seperator;
+        TrancferLog += to_string(Receiver.AccountBalance) + Seperator;
+        TrancferLog += UserName;
+
+        return TrancferLog;
+    }
+
+    void _TransferLog(double Amount,clsBankClient Receiver, string UserName) {
+        string stDataLine = _PreparTransferLogRecored(Amount, Receiver, UserName);
+
+        fstream MyFile;
+        MyFile.open("TransferLog.txt", ios::out | ios::app);
+
+        if (MyFile.is_open()) {
+
+            MyFile << stDataLine << endl;
+            MyFile.close();
+        }
+    }
 public:
 
 
@@ -137,6 +192,12 @@ public:
         _AccountBalance = AccountBalance;
 
     }
+
+    struct stTransferLog {
+        string TDateTime, Sender_AccountNumber,Receiver_AccountNumber ;
+        double TransferAmount, Sender_AccountBalance, Receiver_AccontBalamce;
+        string TUser;
+    };
 
     bool IsEmpty()
     {
@@ -171,6 +232,7 @@ public:
     bool MarkedForDelete() {
         return _MarkedForDelete;
     }
+
 
     /*
       No UI Related code iside object.
@@ -350,7 +412,13 @@ public:
 
         Withdraw(Amount);
         DestinationClient.Deposit(Amount);
+        _TransferLog(Amount, DestinationClient,CurrentUser.UserName);
+
         return true;
+    }
+
+    static vector <stTransferLog> GetTransferLog() {
+        return _LoadTransferLogDataFromFile();
     }
 
 };

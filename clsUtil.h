@@ -164,23 +164,6 @@ public:
         return t;
     }
 
-    static string  EncryptText(string Text, short EncryptionKey) {
-        for (int i = 0; i <= Text.length(); i++) {
-
-            Text[i] = char((int)Text[i] + EncryptionKey);
-        }
-
-        return Text;
-    }
-    static string  DecryptText(string Text, short EncryptionKey) {
-
-        for (int i = 0; i <= Text.length(); i++) {
-
-            Text[i] = char((int)Text[i] - EncryptionKey);
-        }
-        return Text;
-    }
-
     static string NumberToText(int Number) {
         if (Number == 0) {
             return "";
@@ -227,6 +210,17 @@ public:
         }
     }
 
-
+    static string EncryptText(string Text, short Key = 2) {
+        for (char& c : Text) {
+            c = char(c + Key);
+        }
+        return Text;
+    }
+    static string DecryptText(string Text, short Key = 2) {
+        for (char& c : Text) {
+            c = char(c - Key);
+        }
+        return Text;
+    }
 };
 
